@@ -40,13 +40,17 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.d12.expirymonitor.R
+import com.d12.expirymonitor.model.ItemEntity
 import com.d12.expirymonitor.ui_screens.ui_components.DatePickerField
 import com.d12.expirymonitor.utils.StatusBarDynamicColor
+import com.d12.expirymonitor.viewmodel.ItemViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.AngleLeft
 import compose.icons.fontawesomeicons.solid.Camera
 import compose.icons.fontawesomeicons.solid.Cog
+import org.koin.androidx.compose.koinViewModel
+import kotlin.random.Random
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +60,7 @@ fun AddProductScreen(navController: NavController) {
     val backgroundColor = colorResource(id = R.color.raisin_black)
     StatusBarDynamicColor(backgroundColor) // ✅ Keeps status bar consistent
     val context = LocalContext.current
+    val itemViewModel: ItemViewModel = koinViewModel()
 
     Scaffold(
         topBar = {
@@ -123,12 +128,12 @@ fun AddProductScreen(navController: NavController) {
                     .padding(16.dp)
 //                    .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = "Add Product",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = colorResource(id = R.color.raisin_black)
-                )
+//                Text(
+//                    text = "Add Product",
+//                    fontSize = 22.sp,
+//                    fontWeight = FontWeight.Bold,
+//                    color = colorResource(id = R.color.raisin_black)
+//                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -312,7 +317,58 @@ fun AddProductScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        Toast.makeText(context, "Product added!", Toast.LENGTH_SHORT).show()
+
+
+                        if (category.isEmpty()) {
+                            Toast.makeText(context, "Please enter item category", Toast.LENGTH_SHORT)
+                                .show()
+                            return@Button
+                        }
+
+                        if (productName.isEmpty()) {
+                            Toast.makeText(context, "Please enter item name", Toast.LENGTH_SHORT)
+                                .show()
+                            return@Button
+                        }
+
+
+
+                        if (productCode.isEmpty()) {
+                            Toast.makeText(context, "Please enter item code", Toast.LENGTH_SHORT)
+                                .show()
+                            return@Button
+                        }
+
+                        if (manufactureDate.isEmpty()) {
+                            Toast.makeText(context, "Please enter item manufacture Date", Toast.LENGTH_SHORT)
+                                .show()
+                            return@Button
+                        }
+
+                        if (expiryDate.isEmpty()) {
+                            Toast.makeText(context, "Please enter item expiry Date", Toast.LENGTH_SHORT)
+                                .show()
+                            return@Button
+                        }
+
+                    itemViewModel.insertItem(
+                        ItemEntity(
+                           itemName = productName,
+                            itemPhoto = selectedImageUri?.toString() ?: "",
+                            itemCode = productCode,
+                            itemCategory = category,
+                            itemDescription = description,
+                            itemQuantity = quantity.toInt(),
+                            manufactureDate = manufactureDate,
+                            expiryDate = expiryDate,
+                            itemId = generateSixDigitRandomNumber().toString()
+                        )
+                    )
+
+
+
+
+//                        Toast.makeText(context, "Product added!", Toast.LENGTH_SHORT).show()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.aquamarine)
@@ -342,4 +398,8 @@ fun AddProductScreenPreview() {
     AddProductScreen(navController = rememberNavController())
 }
 
+
+fun generateSixDigitRandomNumber(): Int {
+    return Random.nextInt(1000000, 1000000000)  // Generates a random number between 100000 (inclusive) and 1000000 (exclusive)
+}
 

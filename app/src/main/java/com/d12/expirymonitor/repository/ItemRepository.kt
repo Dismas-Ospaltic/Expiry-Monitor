@@ -4,56 +4,49 @@ package com.d12.expirymonitor.repository
 
 
 import com.d12.expirymonitor.data.localData.ItemDao
+import com.d12.expirymonitor.model.ItemEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class ItemRepository(private val itemDao: ItemDao) {
 
-    //    val allDebt: Flow<List<DebtEntity>> = debtDao.getAllDebt(userId)
-    fun getAllWishlist(): Flow<List<WishlistEntity>> = wishDao.getAllWishlist()
+
+    fun getAllItems(): Flow<List<ItemEntity>> = itemDao.getAllItems()
 
 
-    suspend fun insertWish(wish: WishlistEntity) {
-        wishDao.insertWish(wish)
+    suspend fun insertItem(item: ItemEntity) {
+       itemDao.insertItem(item)
     }
 
-    suspend fun updateWish(wish: WishlistEntity) {
-        wishDao.updateWish(wish)
-    }
-
-
-    fun getAllTotalWishlist(): Flow<Int> {
-        return wishDao.getAllTotalWishlist()
-            .map { total -> total ?: 0 }  // Convert NULL to 0.0
+    suspend fun updateItem(item: ItemEntity) {
+        itemDao.updateItem(item)
     }
 
 
-    fun getAllTotalWishlistAmount(): Flow<Float> {
-        return wishDao.getAllTotalWishlistAmount()
-            .map { total -> total ?: 0.0f }  // Convert NULL to 0.0
-    }
-
-
-    fun getAllTotalWishlistPendingAmount(): Flow<Float> {
-        return wishDao.getAllTotalWishlistPendingAmount()
-            .map { total -> total ?: 0.0f }  // Convert NULL to 0.0
-    }
-
-    fun getAllTotalWishlistPurchasedAmount(): Flow<Float> {
-        return wishDao.getAllTotalWishlistPurchasedAmount()
-            .map { total -> total ?: 0.0f }  // Convert NULL to 0.0
-    }
-
-
-
-    suspend fun updateWishStatus(wishId: String, newStatus: String, itemPurchaseDate: String): Boolean {
-        val rowsUpdated = wishDao.updateWishStatus(wishId, newStatus, itemPurchaseDate) ?: 0
+    suspend fun updateItemById(
+        itemName: String,
+        itemPhoto: String,
+        itemCode: String,
+        itemCategory: String,
+        itemDescription: String,
+        itemQuantity: Int,
+        manufactureDate: String,
+        expiryDate: String,
+        itemId: String
+    ): Boolean {
+        val rowsUpdated = itemDao.updateItemById(
+            itemName,
+            itemPhoto,
+            itemCode,
+            itemCategory,
+            itemDescription,
+            itemQuantity,
+            manufactureDate,
+            expiryDate,
+            itemId
+        ) ?: 0
         return rowsUpdated > 0
     }
-
-
-
-
 
 
 

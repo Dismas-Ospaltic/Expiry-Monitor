@@ -11,7 +11,7 @@ data class ItemEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val date: String = dateFormat(System.currentTimeMillis()), //DD-MM-YYYY
     val itemName: String,
-    val itemPhoto: String,
+    val itemPhoto: String? = null,
     val itemCode: String? = null,
     val itemCategory: String,
     val itemDescription: String? = null,

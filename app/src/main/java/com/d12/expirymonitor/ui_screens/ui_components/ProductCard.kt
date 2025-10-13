@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,7 @@ import com.d12.expirymonitor.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductCard(
-    photoUrl: String,
+    photoUrl: String?,
     name: String,
     category: String,
     quantity: Int,
@@ -57,14 +58,27 @@ fun ProductCard(
                 Row(modifier = Modifier.fillMaxWidth()) {
 
                     // Product Image
+//                    AsyncImage(
+//                        model = photoUrl,
+//                        contentDescription = name,
+//                        contentScale = ContentScale.Crop,
+//                        modifier = Modifier
+//                            .size(90.dp)
+//                            .clip(RoundedCornerShape(10.dp))
+//                    )
+
                     AsyncImage(
-                        model = photoUrl,
-                        contentDescription = name,
-                        contentScale = ContentScale.Crop,
+                        model = photoUrl ?: "",
+                        contentDescription = "Product Image",
                         modifier = Modifier
-                            .size(90.dp)
-                            .clip(RoundedCornerShape(10.dp))
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color.LightGray.copy(alpha = 0.2f)),
+                        contentScale = ContentScale.Crop,
+                        error = painterResource(id = R.drawable.image_pa_24),
+                        placeholder = painterResource(id = R.drawable.image_pa_24)
                     )
+
 
                     Spacer(modifier = Modifier.width(12.dp))
 
