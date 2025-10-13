@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomDatePickerDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <!-- Change background color -->
+        <item name="android:colorBackground">@color/aquamarine</item>
+
+        <!-- Change header text color -->
+        <item name="android:textColorPrimary">@color/mint</item>
+
+        <!-- Change accent/selection color -->
+        <item name="colorAccent">@color/raisin_black</item>
+    </style>
+</resources>
