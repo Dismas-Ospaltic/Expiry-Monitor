@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- 💧 Aquamarine -->
+    <color name="aquamarine">#56E39F</color>
+
+    <!-- 🌿 Mint -->
+    <color name="mint">#59C9A5</color>
+
+    <!-- 🌾 Feldgrau -->
+    <color name="feldgrau">#5B6C5D</color>
+
+    <!-- 🌑 Raisin Black -->
+    <color name="raisin_black">#3B2C35</color>
+
+    <!-- 💜 Dark Purple -->
+    <color name="dark_purple">#2A1F2D</color>
+
+
+    <color name="light_bg_color">#f2f3f5</color>
+    <color name="border_color">#e5e8ec</color>
+    <color name="gray01">#c5c5c5</color>
+
+    <color name="tabBackground">#EEEEEE</color>
+    <color name="tabSelected">#1D2231</color>
+    <color name="tabUnselected">#f2f3f5</color>
+
+    <color name="bottom_bar_background">#FFFFFFFF</color>
+    <color name="tab_selected">#1D2231</color>
+    <color name="tab_unselected">#B0BEC5</color>
+    <color name="tab_indicator">#f2f3f5</color>
+
+</resources>
