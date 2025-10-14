@@ -16,8 +16,18 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
     private val _items = MutableStateFlow<List<ItemEntity>>(emptyList())
     val items: StateFlow<List<ItemEntity>> = _items
 
+    // 🔢 Holds count of expired products
+    private val _expiredCount = MutableStateFlow(0)
+    val expiredCount: StateFlow<Int> = _expiredCount
+
+    // 🔢 Holds count of unexpired products
+    private val _unexpiredCount = MutableStateFlow(0)
+    val unexpiredCount: StateFlow<Int> = _unexpiredCount
+
     init {
         getAllItemList()
+        // Automatically fetch counts when ViewModel starts
+        refreshExpiryCounts()
     }
 
 
@@ -103,8 +113,48 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
     }
 
 
+    /**
+     * 🧭 Refresh both expired and unexpired product counts.
+     * Can be called manually when items change.
+     */
+    fun refreshExpiryCounts() {
+        viewModelScope.launch {
+            val expired = itemRepository.getExpiredProductsCount()
+            val unexpired = itemRepository.getUnexpiredProductsCount()
+
+            _expiredCount.value = expired
+            _unexpiredCount.value = unexpired
+        }
+    }
 
 
+
+    /**
+     * ⏰ Check for expired products — triggers only once per expired item.
+     *
+     * @param onExpired - Callback that runs when a product is expired (e.g., show notification)
+     */
+//    fun checkForExpiredProducts(onExpired: (ItemEntity) -> Unit) {
+//        viewModelScope.launch {
+//            // Convert Flow to a single snapshot list
+//            val allProducts = itemRepository.getAllItemsOnce()
+//            val currentTime = System.currentTimeMillis()
+//            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+//
+//            allProducts.forEach { product ->
+//                val expiryMillis = try {
+//                    sdf.parse(product.expiryDate)?.time ?: 0L
+//                } catch (e: Exception) {
+//                    0L
+//                }
+//
+//                if (expiryMillis <= currentTime && !product.notified) {
+//                    onExpired(product)
+//                    itemRepository.markAsNotified(product.itemId)
+//                }
+//            }
+//        }
+//    }
 
 
 

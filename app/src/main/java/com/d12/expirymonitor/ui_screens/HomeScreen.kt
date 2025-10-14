@@ -1,6 +1,8 @@
 package com.d12.expirymonitor.ui_screens
 
 
+import android.app.Activity
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +29,7 @@ import com.d12.expirymonitor.utils.StatusBarDynamicColor
 import com.d12.expirymonitor.R
 import com.d12.expirymonitor.ui_screens.ui_components.ProductCard
 import com.d12.expirymonitor.utils.calculateDaysRemaining
+import com.d12.expirymonitor.utils.requestNotificationPermission
 import com.d12.expirymonitor.viewmodel.ItemViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -202,15 +206,30 @@ fun HomeScreen(navController: NavController) {
     val backgroundColor = colorResource(id = R.color.raisin_black)
     StatusBarDynamicColor(backgroundColor)
 
+    val context = LocalContext.current
+    val activity = context as? Activity
+
     val itemViewModel: ItemViewModel = koinViewModel()
     val items by itemViewModel.items.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
 
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (activity != null) {
+                requestNotificationPermission(activity)
+            }
+        }
+
+
+    }
+
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Products", color = Color.White) },
+                title = { Text("My Products/Items", color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = backgroundColor,
                     titleContentColor = Color.White,
@@ -335,7 +354,7 @@ fun HomeScreen(navController: NavController) {
                         isExpired = isExpired,
                         onClick = {
                             // Open detail or edit
-                            navController.navigate("edit/${item.itemId}")
+
                         }
                     )
                 }

@@ -1,5 +1,7 @@
 package com.d12.expirymonitor.ui_screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -8,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,6 +20,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.platform.LocalLayoutDirection
 import com.d12.expirymonitor.utils.StatusBarDynamicColor
 import com.d12.expirymonitor.R
+import com.d12.expirymonitor.ui_screens.ui_components.SettingLink
+import com.d12.expirymonitor.viewmodel.LocalNotificationPrefsViewModel
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Bell
+import compose.icons.fontawesomeicons.solid.InfoCircle
+import org.koin.androidx.compose.koinViewModel
+import androidx.core.net.toUri
+import compose.icons.fontawesomeicons.solid.Lock
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,15 +36,18 @@ import com.d12.expirymonitor.R
 fun SettingScreen(navController: NavController) {
 
     val backgroundColor = colorResource(id = R.color.raisin_black)
-    StatusBarDynamicColor(backgroundColor)
+//    StatusBarDynamicColor(backgroundColor)
 
+    val context = LocalContext.current
 
-    val searchQuery = remember { mutableStateOf("") }
+    val localNotificationPrefsViewModel: LocalNotificationPrefsViewModel = koinViewModel()
+    val userNotificationData by localNotificationPrefsViewModel.userNotificationData.collectAsState()
+
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Products", color = Color.White) },
+                title = { Text("Setting", color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = backgroundColor,
                     titleContentColor = Color.White,
@@ -46,21 +61,81 @@ fun SettingScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-//                 paddingValues
-                    start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
+                    start = paddingValues.calculateStartPadding(LocalLayoutDirection.current) + 12.dp,
                     top = paddingValues.calculateTopPadding(),
-                    end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
+                    end = paddingValues.calculateEndPadding(LocalLayoutDirection.current) + 12.dp,
                     bottom = paddingValues.calculateBottomPadding() + 80.dp
                 )
                 .verticalScroll(rememberScrollState())
                 .background(colorResource(id = R.color.light_bg_color))
         ) {
+            var notificationsEnabled by remember { mutableStateOf(userNotificationData.isNotificationEnabled) }
 
-            Text(
-                text = "Setting screen",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+            LaunchedEffect(userNotificationData.isNotificationEnabled) {
+                notificationsEnabled = userNotificationData.isNotificationEnabled
+            }
+
+            SettingLink (
+                icon = FontAwesomeIcons.Solid.Bell,
+                title = "Notifications",
+                iconColor = colorResource(id = R.color.aquamarine),
+                trailing = {
+                    Switch(
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = colorResource(id = R.color.mint),
+                            checkedTrackColor = colorResource(id = R.color.mint).copy(alpha = 0.5f),
+                            uncheckedThumbColor = Color.LightGray,
+                            uncheckedTrackColor = Color.Gray
+                        ),
+                        checked = notificationsEnabled,
+                        onCheckedChange = { enabled ->
+                            notificationsEnabled = enabled
+                            if (enabled) {
+                                localNotificationPrefsViewModel.saveUserData()
+                            } else {
+                                localNotificationPrefsViewModel.clearUserData()
+                            }
+                        }
+
+                    )
+                },
+                onClick = {
+                    if (notificationsEnabled) {
+                        // Currently enabled → turn OFF and clear data
+                        notificationsEnabled = false
+                       localNotificationPrefsViewModel.clearUserData()
+                    } else {
+                        // Currently disabled → turn ON and save data
+                        notificationsEnabled = true
+                        localNotificationPrefsViewModel.saveUserData()
+                    }
+                }
+
+            )
+
+            SettingLink(
+                icon = FontAwesomeIcons.Solid.InfoCircle,
+                title = "About",
+                iconColor = colorResource(id = R.color.raisin_black),
+                onClick = { /* Navigate */
+
+
+                }
+            )
+
+
+            SettingLink(
+                icon = FontAwesomeIcons.Solid.Lock,
+                title = "Privacy policy",
+                iconColor = colorResource(id = R.color.dark_purple),
+                onClick = {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        "https://policy/privacy-policy.html".toUri()
+                    )
+                    context.startActivity(intent)
+                    /* Navigate */
+                }
             )
 
         }

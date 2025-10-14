@@ -21,12 +21,14 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.sp
 import com.d12.expirymonitor.utils.StatusBarDynamicColor
 import com.d12.expirymonitor.R
+import com.d12.expirymonitor.viewmodel.ItemViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.ExclamationCircle
 import compose.icons.fontawesomeicons.solid.ExclamationTriangle
 import compose.icons.fontawesomeicons.solid.OilCan
 import compose.icons.fontawesomeicons.solid.ShieldAlt
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +37,9 @@ fun ProductOverViewScreen(navController: NavController) {
 
     val backgroundColor = colorResource(id = R.color.raisin_black)
     StatusBarDynamicColor(backgroundColor)
-
+    val itemViewModel: ItemViewModel = koinViewModel()
+    val expired by itemViewModel.expiredCount.collectAsState()
+    val unexpired by itemViewModel.unexpiredCount.collectAsState()
 
     Scaffold(
         topBar = {
@@ -72,15 +76,15 @@ fun ProductOverViewScreen(navController: NavController) {
             ) {
 
                 OverviewCard(
-                    title = "Unexpired products",
-                    value = "23",
+                    title = "Unexpired Items",
+                    value = unexpired.toString(),
                     icon = FontAwesomeIcons.Solid.ShieldAlt,
                     backgroundColor = Color(0xFF4CAF50) // Green
                 )
 
                 OverviewCard(
-                    title = "Low Stock Products",
-                    value = "89",
+                    title = "Expired Items",
+                    value = expired.toString(),
                     icon = FontAwesomeIcons.Solid.ExclamationCircle,
                     backgroundColor = Color(0xFFE91E63) // Pink/Red
                 )

@@ -23,6 +23,9 @@ interface ItemDao {
     @Query("SELECT * FROM items ORDER BY timestamp DESC")
     fun getAllItems(): Flow<List<ItemEntity>>
 
+    @Query("SELECT * FROM items")
+    suspend fun getAllItemsOnce(): List<ItemEntity>  // One-time fetch for ViewModel check
+
 
     @Query("UPDATE items SET itemName = :itemName , " +
             " itemPhoto = :itemPhoto ,itemCode =:itemCode," +
@@ -40,6 +43,18 @@ interface ItemDao {
        expiryDate: String,
        itemId: String
     ): Int?
+
+
+    // 🔹 Count expired products (expiry date before today)
+    @Query("SELECT COUNT(*) FROM items WHERE expiryDate < :today")
+    suspend fun getExpiredProductsCount(today: String): Int
+
+    // 🔹 Count unexpired products (expiry date today or later)
+    @Query("SELECT COUNT(*) FROM items WHERE expiryDate >= :today")
+    suspend fun getUnexpiredProductsCount(today: String): Int
+
+//    @Query("UPDATE items SET notified = 1 WHERE itemId = :itemId")
+//    suspend fun markAsNotified(itemId: String)
 
 
 }
