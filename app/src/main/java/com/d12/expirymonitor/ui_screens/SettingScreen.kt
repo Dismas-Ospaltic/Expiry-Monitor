@@ -28,6 +28,7 @@ import compose.icons.fontawesomeicons.solid.Bell
 import compose.icons.fontawesomeicons.solid.InfoCircle
 import org.koin.androidx.compose.koinViewModel
 import androidx.core.net.toUri
+import com.d12.expirymonitor.navigationGraph.Screen
 import compose.icons.fontawesomeicons.solid.Lock
 
 
@@ -61,9 +62,9 @@ fun SettingScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    start = paddingValues.calculateStartPadding(LocalLayoutDirection.current) + 12.dp,
+                    start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
                     top = paddingValues.calculateTopPadding(),
-                    end = paddingValues.calculateEndPadding(LocalLayoutDirection.current) + 12.dp,
+                    end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
                     bottom = paddingValues.calculateBottomPadding() + 80.dp
                 )
                 .verticalScroll(rememberScrollState())
@@ -75,9 +76,46 @@ fun SettingScreen(navController: NavController) {
                 notificationsEnabled = userNotificationData.isNotificationEnabled
             }
 
-            SettingLink (
+
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        start = paddingValues.calculateStartPadding(LocalLayoutDirection.current) + 12.dp,
+                        end = paddingValues.calculateEndPadding(LocalLayoutDirection.current) + 12.dp,
+
+                    )
+            ) {
+
+                SettingLink(
+                    icon = FontAwesomeIcons.Solid.InfoCircle,
+                    title = "About",
+                    iconColor = colorResource(id = R.color.raisin_black),
+                    onClick = { /* Navigate */
+
+                       navController.navigate(Screen.AboutApp.route)
+                    }
+                )
+
+
+                SettingLink(
+                    icon = FontAwesomeIcons.Solid.Lock,
+                    title = "Privacy policy",
+                    iconColor = colorResource(id = R.color.dark_purple),
+                    onClick = {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            "https://policy/privacy-policy.html".toUri()
+                        )
+                        context.startActivity(intent)
+                        /* Navigate */
+                    }
+                )
+
+            SettingLink(
                 icon = FontAwesomeIcons.Solid.Bell,
-                title = "Notifications",
+                title = "Enable Notifications",
                 iconColor = colorResource(id = R.color.aquamarine),
                 trailing = {
                     Switch(
@@ -103,7 +141,7 @@ fun SettingScreen(navController: NavController) {
                     if (notificationsEnabled) {
                         // Currently enabled → turn OFF and clear data
                         notificationsEnabled = false
-                       localNotificationPrefsViewModel.clearUserData()
+                        localNotificationPrefsViewModel.clearUserData()
                     } else {
                         // Currently disabled → turn ON and save data
                         notificationsEnabled = true
@@ -113,35 +151,12 @@ fun SettingScreen(navController: NavController) {
 
             )
 
-            SettingLink(
-                icon = FontAwesomeIcons.Solid.InfoCircle,
-                title = "About",
-                iconColor = colorResource(id = R.color.raisin_black),
-                onClick = { /* Navigate */
 
-
-                }
-            )
-
-
-            SettingLink(
-                icon = FontAwesomeIcons.Solid.Lock,
-                title = "Privacy policy",
-                iconColor = colorResource(id = R.color.dark_purple),
-                onClick = {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        "https://policy/privacy-policy.html".toUri()
-                    )
-                    context.startActivity(intent)
-                    /* Navigate */
-                }
-            )
 
         }
 
     }
-
+}
 
 
 }

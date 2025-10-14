@@ -8,6 +8,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import androidx.compose.animation.*
 import androidx.compose.ui.Modifier
+import com.d12.expirymonitor.ui_screens.AboutScreen
 import com.d12.expirymonitor.ui_screens.AddProductScreen
 import com.d12.expirymonitor.ui_screens.HomeScreen
 import com.d12.expirymonitor.ui_screens.ProductOverViewScreen
@@ -25,6 +26,8 @@ sealed class Screen(val route: String) {
 
 
     object  OverView : Screen("overView")
+
+    object AboutApp : Screen("aboutApp")
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -44,7 +47,7 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier) {
         composable(Screen.Settings.route) { SettingScreen(navController) }
         composable(Screen.AddProduct.route) { AddProductScreen(navController) }
         composable(Screen.OverView.route) { ProductOverViewScreen(navController) }
-
+        composable(Screen.AboutApp.route) { AboutScreen(navController) }
 //        composable(Screen.EditProduct.route) { backStackEntry ->
 //            val itemId = backStackEntry.arguments?.getString("itemId") ?: "Unknown"
 //            EditProductScreen(navController, itemId)
