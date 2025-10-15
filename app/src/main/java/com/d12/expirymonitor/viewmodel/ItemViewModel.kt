@@ -1,6 +1,7 @@
 package com.d12.expirymonitor.viewmodel
 
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.d12.expirymonitor.model.ItemEntity
@@ -109,6 +110,22 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
                     } else item
                 }
             }
+        }
+    }
+
+
+//    // 🔹 Delete item by ID
+//    fun deleteItemById(itemId: String, onResult: (Boolean) -> Unit = {}) {
+//        viewModelScope.launch {
+//            val success = itemRepository.deleteItemById(itemId)
+//            if (success) getAllItemList() // Refresh list
+//            onResult(success)
+//        }
+//    }
+
+    fun deleteItemById(context: Context, itemId: String, itemPhotoPath: String?) {
+        viewModelScope.launch {
+            itemRepository.deleteItemById(context, itemId, itemPhotoPath)
         }
     }
 

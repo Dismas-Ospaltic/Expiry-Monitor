@@ -60,17 +60,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.d12.expirymonitor.R
+import com.d12.expirymonitor.viewmodel.ItemViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.regular.TrashAlt
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoreActionPop(
     onDismiss: () -> Unit,
-    itemId: String
+    itemId: String,
+    itemPhotoPath: String?
 ) {
-
+    val itemViewModel: ItemViewModel = koinViewModel()
     val backgroundColor = colorResource(id = R.color.aquamarine)
 
     val context = LocalContext.current
@@ -102,8 +105,7 @@ fun MoreActionPop(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-
-                            onDismiss()
+                            showDeleteDialog = true
                         }
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -139,4 +141,72 @@ fun MoreActionPop(
             }
         }
     }
+
+
+
+
+//    // AlertDialog logic
+//    if (showDeleteDialog) {
+//        AlertDialog(
+//            onDismissRequest = { showDeleteDialog = false },
+//            title = { Text("Delete Item") },
+//            text = { Text("Delete Item permanently From List?") },
+//            confirmButton = {
+//                TextButton(onClick = {
+//                    itemViewModel.deleteItemById(itemId)
+//                    onDismiss()
+//
+//                    Toast.makeText(
+//                        context,
+//                        "Item Delete",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                    showDeleteDialog = false
+//                }) {
+//                    Text(
+//                        text = "Delete",
+//                        color = colorResource(id = R.color.aquamarine)
+//                    )
+//                }
+//            },
+//            dismissButton = {
+//                TextButton(onClick = { showDeleteDialog = false;
+//                    onDismiss()
+//                }) {
+//                    Text(
+//                        text = "Cancel",
+//                        color = colorResource(id = R.color.gray01)
+//                    )
+//                }
+//            }
+//        )
+//    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete Item") },
+            text = { Text("Delete Item permanently from the list and remove its image?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    itemViewModel.deleteItemById(context, itemId, itemPhotoPath)
+                    Toast.makeText(context, "Item deleted", Toast.LENGTH_SHORT).show()
+                    showDeleteDialog = false
+                    onDismiss()
+                }) {
+                    Text("Delete", color = colorResource(id = R.color.aquamarine))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    onDismiss()
+                }) {
+                    Text("Cancel", color = colorResource(id = R.color.gray01))
+                }
+            }
+        )
+    }
+
+
 }

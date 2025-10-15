@@ -45,6 +45,12 @@ interface ItemDao {
     ): Int?
 
 
+
+    // 🔹 Delete an item by its unique itemId
+    @Query("DELETE FROM items WHERE itemId = :itemId")
+    suspend fun deleteItemById(itemId: String): Int
+
+
     // 🔹 Count expired products (expiry date before today)
     @Query("SELECT COUNT(*) FROM items WHERE expiryDate < :today")
     suspend fun getExpiredProductsCount(today: String): Int

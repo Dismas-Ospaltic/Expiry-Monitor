@@ -327,6 +327,7 @@ fun HomeScreen(navController: NavController) {
     val items by itemViewModel.items.collectAsState()
     var showActionDialog by remember { mutableStateOf(false) }
     var selectedItemId by remember { mutableStateOf<String?>(null) }
+    var selectedItemImagePath by remember { mutableStateOf<String?>(null) }
 
     var searchQuery by remember { mutableStateOf("") }
 
@@ -486,6 +487,7 @@ fun HomeScreen(navController: NavController) {
                                     isExpired = isExpired,
                                     onClick = { /* Navigate to details */
                                     selectedItemId = item.itemId
+                                     selectedItemImagePath = item.itemPhoto
                                       showActionDialog = true
                                     }
                                 )
@@ -499,7 +501,8 @@ fun HomeScreen(navController: NavController) {
         if (showActionDialog) {
             MoreActionPop(
                 onDismiss = {  showActionDialog = false },
-                            itemId = selectedItemId.toString()
+                            itemId = selectedItemId.toString(),
+                            itemPhotoPath = selectedItemImagePath
 
             )
 
