@@ -5,7 +5,10 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -27,6 +30,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextOverflow
 import com.d12.expirymonitor.utils.StatusBarDynamicColor
 import com.d12.expirymonitor.R
+import com.d12.expirymonitor.ui_screens.ui_components.MoreActionPop
 import com.d12.expirymonitor.ui_screens.ui_components.ProductCard
 import com.d12.expirymonitor.utils.calculateDaysRemaining
 import com.d12.expirymonitor.utils.requestNotificationPermission
@@ -35,6 +39,7 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.CalendarDay
 import compose.icons.fontawesomeicons.solid.Search
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -45,55 +50,35 @@ import org.koin.androidx.compose.koinViewModel
 //    val backgroundColor = colorResource(id = R.color.raisin_black)
 //    StatusBarDynamicColor(backgroundColor)
 //
+//    val context = LocalContext.current
+//    val activity = context as? Activity
+//
 //    val itemViewModel: ItemViewModel = koinViewModel()
 //    val items by itemViewModel.items.collectAsState()
 //
+//    var searchQuery by remember { mutableStateOf("") }
+//
+//    val tabs = listOf("All", "Unexpired", "Expired")
+//    val pagerState = rememberPagerState(pageCount = { tabs.size })
+//    val coroutineScope = rememberCoroutineScope()
+//    val interactionSource = remember { MutableInteractionSource() }
+//    var isHovered by remember { mutableStateOf(false) }
+//
+//    LaunchedEffect(Unit) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            if (activity != null) {
+//                requestNotificationPermission(activity)
+//            }
+//        }
 //
 //
+//    }
 //
-//    // 🧺 Sample list of products
-//    val productList = listOf(
-//        Product(
-//            photoUrl = "https://images.unsplash.com/photo-1585238342029-3b4b1a3f1d4d",
-//            name = "Canned Tuna",
-//            category = "Food",
-//            quantity = 10,
-//            manufactureDate = "2024-02-01",
-//            expiryDate = "2025-02-01",
-//            description = "Premium canned tuna rich in protein and omega-3.",
-//            daysRemaining = 120,
-//            isExpired = false
-//        ),
-//        Product(
-//            photoUrl = "https://images.unsplash.com/photo-1600093463592-3b5de9d3ec1a",
-//            name = "Pain Relief Tablets",
-//            category = "Medicine",
-//            quantity = 2,
-//            manufactureDate = "2023-12-01",
-//            expiryDate = "2024-09-01",
-//            description = "Fast-acting tablets for pain relief and fever reduction.",
-//            daysRemaining = 0,
-//            isExpired = true
-//        ),
-//        Product(
-//            photoUrl = "https://images.unsplash.com/photo-1576402187873-66e4b6fcaf4e",
-//            name = "Chocolate Cookies",
-//            category = "Snacks",
-//            quantity = 5,
-//            manufactureDate = "2024-05-15",
-//            expiryDate = "2025-01-15",
-//            description = "Crispy chocolate chip cookies made with real butter.",
-//            daysRemaining = 90,
-//            isExpired = false
-//        )
-//    )
-//
-//    val searchQuery = remember { mutableStateOf("") }
 //
 //    Scaffold(
 //        topBar = {
 //            TopAppBar(
-//                title = { Text("My Products", color = Color.White) },
+//                title = { Text("My Products/Items", color = Color.White) },
 //                colors = TopAppBarDefaults.topAppBarColors(
 //                    containerColor = backgroundColor,
 //                    titleContentColor = Color.White,
@@ -107,7 +92,6 @@ import org.koin.androidx.compose.koinViewModel
 //            modifier = Modifier
 //                .fillMaxSize()
 //                .padding(
-////                 paddingValues
 //                    start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
 //                    top = paddingValues.calculateTopPadding(),
 //                    end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
@@ -118,18 +102,11 @@ import org.koin.androidx.compose.koinViewModel
 //        ) {
 //            Spacer(modifier = Modifier.height(10.dp))
 //
-//            Box(
-//                modifier = Modifier.fillMaxWidth(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//
-//
-//            }
 //
 //            // Search Field
 //            TextField(
-//                value = searchQuery.value,
-//                onValueChange = { searchQuery.value = it },
+//                value = searchQuery,
+//                onValueChange = { searchQuery = it },
 //                placeholder = { Text(text = "Search...") },
 //                leadingIcon = {
 //
@@ -155,49 +132,186 @@ import org.koin.androidx.compose.koinViewModel
 //                ),
 //                singleLine = true
 //            )
+////            // 🔍 Search Field
+////            TextField(
+////                value = searchQuery,
+////                onValueChange = { searchQuery = it },
+////                placeholder = { Text("Search by name or category...") },
+////                leadingIcon = {
+////                    Icon(
+////                        imageVector = FontAwesomeIcons.Solid.Search,
+////                        contentDescription = "Search Icon",
+////                        tint = Color.Gray
+////                    )
+////                },
+////                modifier = Modifier
+////                    .fillMaxWidth()
+////                    .padding(horizontal = 16.dp)
+////                    .clip(RoundedCornerShape(12.dp))
+////                    .background(Color.White),
+////                colors = TextFieldDefaults.colors(
+////                    focusedContainerColor = Color.Transparent,
+////                    unfocusedContainerColor = Color.Transparent,
+////                    disabledContainerColor = Color.Transparent,
+////                    cursorColor = Color.Black,
+////                    focusedIndicatorColor = Color.Transparent,
+////                    unfocusedIndicatorColor = Color.Transparent
+////                ),
+////                singleLine = true
+////            )
 //
 //            Spacer(modifier = Modifier.height(16.dp))
 //
 //
-//            // 🧾 List of Product Cards
-//            for (product in productList) {
-//                ProductCard(
-//                    photoUrl = product.photoUrl,
-//                    name = product.name,
-//                    category = product.category,
-//                    quantity = product.quantity,
-//                    manufactureDate = product.manufactureDate,
-//                    expiryDate = product.expiryDate,
-//                    description = product.description,
-//                    daysRemaining = product.daysRemaining,
-//                    isExpired = product.isExpired,
-//                    onClick = {
-//                        // handle click
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(700.dp) // Fixed height for the entire view
+//                    .padding(16.dp)
+//            ) {
+//                // Tabs should remain fixed at the top
+//                ScrollableTabRow(
+//                    selectedTabIndex = pagerState.currentPage,
+//                    edgePadding = 12.dp,
+//                    modifier = Modifier
+//                        .padding(vertical = 6.dp)
+//                        .clip(RoundedCornerShape(20.dp)),
+//                    contentColor = Color.White,
+//                    divider = {},
+//                    indicator = {}
+//                ) {
+//
+//                    tabs.forEachIndexed { index, title ->
+//                        Tab(
+//                            selected = pagerState.currentPage == index,
+//                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+//                            modifier = Modifier
+//                                .padding(horizontal = 4.dp)
+//                                .clip(RoundedCornerShape(12.dp))
+//                                .background(
+//                                    if (pagerState.currentPage == index)
+//                                        colorResource(id = R.color.tabSelected)
+//                                    else
+//                                        colorResource(id = R.color.tabUnselected)
+//                                )
+//                        ) {
+//                            Text(
+//                                text = title,
+//                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+//                                color = if (pagerState.currentPage == index) Color.White else Color.Gray
+//                            )
+//                        }
 //                    }
-//                )
+//
+//
+//
+//                }
+//
+//                // Scrollable content
+//                Box(
+//                    modifier = Modifier
+//                        .weight(1f) // Makes this section take the available space
+//                        .fillMaxSize()
+//                ) {
+//                    HorizontalPager(
+//                        state = pagerState,
+//                        modifier = Modifier.fillMaxSize()
+//                    ) { page ->
+//                        val filteredItems = when (page) {
+//                            0 -> paymentItems // "All" tab shows items
+//                            1 -> paymentItems.filter {
+//                                it.status.equals(
+//                                    "Unexpired",
+//                                    ignoreCase = true
+//                                )
+//                            }
+//
+//                            2 -> paymentItems.filter {
+//                                it.status.equals(
+//                                    "Expired",
+//                                    ignoreCase = true
+//                                )
+//                            }
+//
+//
+//                            else -> emptyList()
+//                        }
+//
+//
+//
+//
+//                    }
+//
+//
+//                }
+//
+//
+//
+//
+//
+//
 //            }
 //
 //
+//
+//
+//            // 🔎 Filter items based on search query
+//            val filteredItems = items.filter {
+//                it.itemName.contains(searchQuery, ignoreCase = true) ||
+//                        it.itemCategory.contains(searchQuery, ignoreCase = true)
+//            }
+//
+//            if (filteredItems.isEmpty()) {
+//                // 🕳️ Show message when no data
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(top = 100.dp),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = "No data available",
+//                        color = colorResource(id = R.color.gray01),
+//                        fontSize = 16.sp,
+//                        fontWeight = FontWeight.Medium
+//                    )
+//                }
+//            } else {
+//                // 🧾 Show Product Cards from Room data
+//                filteredItems.forEach { item ->
+//
+//                    // Calculate expiry status
+//                    val daysRemaining = calculateDaysRemaining(item.expiryDate)
+//                    val isExpired = daysRemaining <= 0
+//
+//                    ProductCard(
+//                        photoUrl = item.itemPhoto,
+//                        name = item.itemName,
+//                        category = item.itemCategory,
+//                        quantity = item.itemQuantity,
+//                        manufactureDate = item.manufactureDate,
+//                        expiryDate = item.expiryDate,
+//                        description = item.itemDescription ?: "No description available",
+//                        daysRemaining = daysRemaining,
+//                        isExpired = isExpired,
+//                        onClick = {
+//                            // Open detail or edit
+//
+//                        }
+//                    )
+//                }
+//            }
 //        }
-//
 //    }
-//
-//
-//
 //}
 //
 //
-//data class Product(
-//    val photoUrl: String,
-//    val name: String,
-//    val category: String,
-//    val quantity: Int,
-//    val manufactureDate: String,
-//    val expiryDate: String,
-//    val description: String,
-//    val daysRemaining: Int,
-//    val isExpired: Boolean
-//)
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeScreenPreview() {
+//    HomeScreen(navController = rememberNavController())
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -211,29 +325,29 @@ fun HomeScreen(navController: NavController) {
 
     val itemViewModel: ItemViewModel = koinViewModel()
     val items by itemViewModel.items.collectAsState()
+    var showActionDialog by remember { mutableStateOf(false) }
+    var selectedItemId by remember { mutableStateOf<String?>(null) }
 
     var searchQuery by remember { mutableStateOf("") }
 
+    val tabs = listOf("All", "Unexpired", "Expired")
+    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    val coroutineScope = rememberCoroutineScope()
 
+    // Request notification permission (Android 13+)
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (activity != null) {
-                requestNotificationPermission(activity)
-            }
+            activity?.let { requestNotificationPermission(it) }
         }
-
-
     }
-
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Products/Items", color = Color.White) },
+                title = { Text("My Products / Items", color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = backgroundColor,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
+                    titleContentColor = Color.White
                 )
             )
         }
@@ -248,19 +362,16 @@ fun HomeScreen(navController: NavController) {
                     end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
                     bottom = paddingValues.calculateBottomPadding() + 80.dp
                 )
-                .verticalScroll(rememberScrollState())
                 .background(colorResource(id = R.color.light_bg_color))
         ) {
             Spacer(modifier = Modifier.height(10.dp))
 
-
-            // Search Field
+            // 🔍 Search Field
             TextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text(text = "Search...") },
+                placeholder = { Text(text = "Search by name or category...") },
                 leadingIcon = {
-
                     Icon(
                         imageVector = FontAwesomeIcons.Solid.Search,
                         contentDescription = "Search Icon",
@@ -270,105 +381,135 @@ fun HomeScreen(navController: NavController) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.White),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
                     cursorColor = Color.Black,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 ),
                 singleLine = true
             )
-//            // 🔍 Search Field
-//            TextField(
-//                value = searchQuery,
-//                onValueChange = { searchQuery = it },
-//                placeholder = { Text("Search by name or category...") },
-//                leadingIcon = {
-//                    Icon(
-//                        imageVector = FontAwesomeIcons.Solid.Search,
-//                        contentDescription = "Search Icon",
-//                        tint = Color.Gray
-//                    )
-//                },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = 16.dp)
-//                    .clip(RoundedCornerShape(12.dp))
-//                    .background(Color.White),
-//                colors = TextFieldDefaults.colors(
-//                    focusedContainerColor = Color.Transparent,
-//                    unfocusedContainerColor = Color.Transparent,
-//                    disabledContainerColor = Color.Transparent,
-//                    cursorColor = Color.Black,
-//                    focusedIndicatorColor = Color.Transparent,
-//                    unfocusedIndicatorColor = Color.Transparent
-//                ),
-//                singleLine = true
-//            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 🔎 Filter items based on search query
-            val filteredItems = items.filter {
-                it.itemName.contains(searchQuery, ignoreCase = true) ||
-                        it.itemCategory.contains(searchQuery, ignoreCase = true)
-            }
-
-            if (filteredItems.isEmpty()) {
-                // 🕳️ Show message when no data
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 100.dp),
-                    contentAlignment = Alignment.Center
+            // 🗂 Tabs Section
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
+            ) {
+                ScrollableTabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    edgePadding = 12.dp,
+                    containerColor = Color.Transparent,
+                    divider = {},
+                    indicator = {}
                 ) {
-                    Text(
-                        text = "No data available",
-                        color = colorResource(id = R.color.gray01),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            } else {
-                // 🧾 Show Product Cards from Room data
-                filteredItems.forEach { item ->
-
-                    // Calculate expiry status
-                    val daysRemaining = calculateDaysRemaining(item.expiryDate)
-                    val isExpired = daysRemaining <= 0
-
-                    ProductCard(
-                        photoUrl = item.itemPhoto,
-                        name = item.itemName,
-                        category = item.itemCategory,
-                        quantity = item.itemQuantity,
-                        manufactureDate = item.manufactureDate,
-                        expiryDate = item.expiryDate,
-                        description = item.itemDescription ?: "No description available",
-                        daysRemaining = daysRemaining,
-                        isExpired = isExpired,
-                        onClick = {
-                            // Open detail or edit
-
+                    tabs.forEachIndexed { index, title ->
+                        val selected = pagerState.currentPage == index
+                        Tab(
+                            selected = selected,
+                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(
+                                    if (selected)
+                                        colorResource(id = R.color.tabSelected)
+                                    else
+                                        colorResource(id = R.color.tabUnselected)
+                                )
+                        ) {
+                            Text(
+                                text = title,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                                color = if (selected) Color.White else Color.Gray,
+                                fontWeight = FontWeight.Medium
+                            )
                         }
-                    )
+                    }
+                }
+
+                // 📜 Horizontal Pager for Tab Content
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) { page ->
+
+                    val filteredItems = when (page) {
+                        0 -> items // All
+                        1 -> items.filter { calculateDaysRemaining(it.expiryDate) > 0 } // Unexpired
+                        2 -> items.filter { calculateDaysRemaining(it.expiryDate) <= 0 } // Expired
+                        else -> emptyList()
+                    }.filter {
+                        it.itemName.contains(searchQuery, ignoreCase = true) ||
+                                it.itemCategory.contains(searchQuery, ignoreCase = true)
+                    }
+
+                    if (filteredItems.isEmpty()) {
+                        // 🕳 No items found
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No items available",
+                                color = colorResource(id = R.color.gray01),
+                                fontSize = 16.sp
+                            )
+                        }
+                    } else {
+                        // 🧾 Show cards
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState())
+                                .padding(bottom = 80.dp)
+                        ) {
+                            filteredItems.forEach { item ->
+                                val daysRemaining = calculateDaysRemaining(item.expiryDate)
+                                val isExpired = daysRemaining <= 0
+
+                                ProductCard(
+                                    photoUrl = item.itemPhoto,
+                                    name = item.itemName,
+                                    category = item.itemCategory,
+                                    quantity = item.itemQuantity,
+                                    manufactureDate = item.manufactureDate,
+                                    expiryDate = item.expiryDate,
+                                    description = item.itemDescription ?: "No description available",
+                                    daysRemaining = daysRemaining,
+                                    isExpired = isExpired,
+                                    onClick = { /* Navigate to details */
+                                    selectedItemId = item.itemId
+                                      showActionDialog = true
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
+
+        if (showActionDialog) {
+            MoreActionPop(
+                onDismiss = {  showActionDialog = false },
+                            itemId = selectedItemId.toString()
+
+            )
+
+        }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(navController = rememberNavController())
 }
-
 

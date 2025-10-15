@@ -241,12 +241,21 @@ fun AboutScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(28.dp))
 
             // 🔹 Intellectual Property & Attribution
+
+            Text(
+                text = "Intellectual Property Notice",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.fillMaxWidth()
+            )
             Text(
                 text = """
-                © 2025 D12 Labs. All rights reserved.
+               
+All content, designs, and code in this application are original works created by D12 Labs.
 
-                Font Awesome icons are used under the Font Awesome Free License.
-                Lottie animations are sourced from LottieFiles, used under their respective open licenses.
+Third-party assets (such as icons and animations) are the property of their respective owners and are used in accordance with their free to use licenses.
+
+D12 Labs makes no claim of ownership over any third-party assets utilized within this application. All trademarks, logos, and brand names are the property of their respective owners.
             """.trimIndent(),
                 textAlign = TextAlign.Center,
                 color = Color.Gray,
