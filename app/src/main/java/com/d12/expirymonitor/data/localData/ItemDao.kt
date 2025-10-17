@@ -62,5 +62,6 @@ interface ItemDao {
 //    @Query("UPDATE items SET notified = 1 WHERE itemId = :itemId")
 //    suspend fun markAsNotified(itemId: String)
 
-
+    @Query("SELECT * FROM items WHERE itemId = :itemId")
+    suspend fun getItemById(itemId: String): ItemEntity?
 }

@@ -98,6 +98,10 @@ class ItemRepository(private val itemDao: ItemDao) {
     }
 
 
+    suspend fun getEventById(itemId: String): ItemEntity? {
+        return itemDao.getItemById(itemId)
+    }
+
     // 🟣 Get unexpired product count
     suspend fun getUnexpiredProductsCount(): Int {
         val today = getTodayDate()

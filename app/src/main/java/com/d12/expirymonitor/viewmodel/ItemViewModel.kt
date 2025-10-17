@@ -114,14 +114,15 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
     }
 
 
-//    // 🔹 Delete item by ID
-//    fun deleteItemById(itemId: String, onResult: (Boolean) -> Unit = {}) {
-//        viewModelScope.launch {
-//            val success = itemRepository.deleteItemById(itemId)
-//            if (success) getAllItemList() // Refresh list
-//            onResult(success)
-//        }
-//    }
+    // Holds a single event item
+    private val _itemDetail = MutableStateFlow<ItemEntity?>(null)
+    val itemDetail: StateFlow<ItemEntity?> = _itemDetail
+
+    fun getItemById(eventId: String) {
+        viewModelScope.launch {
+            _itemDetail.value = itemRepository.getEventById(eventId)
+        }
+    }
 
     fun deleteItemById(context: Context, itemId: String, itemPhotoPath: String?) {
         viewModelScope.launch {
