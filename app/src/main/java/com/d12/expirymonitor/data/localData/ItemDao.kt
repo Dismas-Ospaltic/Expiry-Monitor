@@ -27,11 +27,35 @@ interface ItemDao {
     suspend fun getAllItemsOnce(): List<ItemEntity>  // One-time fetch for ViewModel check
 
 
-    @Query("UPDATE items SET itemName = :itemName , " +
-            " itemPhoto = :itemPhoto ,itemCode =:itemCode," +
-            " itemCategory =:itemCategory,itemDescription=:itemDescription," +
-            "itemQuantity=:itemQuantity, manufactureDate=:manufactureDate, " +
-            "expiryDate=:expiryDate  WHERE itemId = :itemId")
+//    @Query("UPDATE items SET itemName = :itemName , " +
+//            " itemPhoto = :itemPhoto ,itemCode =:itemCode," +
+//            " itemCategory =:itemCategory,itemDescription=:itemDescription," +
+//            "itemQuantity=:itemQuantity, manufactureDate=:manufactureDate, " +
+//            "expiryDate=:expiryDate  WHERE itemId = :itemId")
+//    suspend fun updateItemById(
+//        itemName: String,
+//        itemPhoto: String,
+//        itemCode: String,
+//        itemCategory: String,
+//        itemDescription: String,
+//        itemQuantity: Int,
+//       manufactureDate: String,
+//       expiryDate: String,
+//       itemId: String
+//    ): Int?
+
+    @Query("""
+        UPDATE items 
+        SET itemName = :itemName, 
+            itemPhoto = :itemPhoto, 
+            itemCode = :itemCode,
+            itemCategory = :itemCategory, 
+            itemDescription = :itemDescription,
+            itemQuantity = :itemQuantity, 
+            manufactureDate = :manufactureDate,
+            expiryDate = :expiryDate  
+        WHERE itemId = :itemId
+    """)
     suspend fun updateItemById(
         itemName: String,
         itemPhoto: String,
@@ -39,12 +63,10 @@ interface ItemDao {
         itemCategory: String,
         itemDescription: String,
         itemQuantity: Int,
-       manufactureDate: String,
-       expiryDate: String,
-       itemId: String
+        manufactureDate: String,
+        expiryDate: String,
+        itemId: String
     ): Int?
-
-
 
     // 🔹 Delete an item by its unique itemId
     @Query("DELETE FROM items WHERE itemId = :itemId")

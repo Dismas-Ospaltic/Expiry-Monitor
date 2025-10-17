@@ -500,6 +500,7 @@ fun HomeScreen(navController: NavController) {
 
         if (showActionDialog) {
             MoreActionPop(
+                           navController,
                 onDismiss = {  showActionDialog = false },
                             itemId = selectedItemId.toString(),
                             itemPhotoPath = selectedItemImagePath

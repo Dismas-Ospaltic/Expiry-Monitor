@@ -35,9 +35,40 @@ class ItemRepository(private val itemDao: ItemDao) {
     }
 
 
+//    suspend fun updateItemById(
+//        itemName: String,
+//        itemPhoto: String,
+//        itemCode: String,
+//        itemCategory: String,
+//        itemDescription: String,
+//        itemQuantity: Int,
+//        manufactureDate: String,
+//        expiryDate: String,
+//        itemId: String
+//    ): Boolean {
+//        val rowsUpdated = itemDao.updateItemById(
+//            itemName,
+//            itemPhoto,
+//            itemCode,
+//            itemCategory,
+//            itemDescription,
+//            itemQuantity,
+//            manufactureDate,
+//            expiryDate,
+//            itemId
+//        ) ?: 0
+//        return rowsUpdated > 0
+//    }
+
+
+
+
+
     suspend fun updateItemById(
+        context: Context,
         itemName: String,
-        itemPhoto: String,
+        newItemPhoto: String,
+        oldItemPhoto: String?, // 🆕
         itemCode: String,
         itemCategory: String,
         itemDescription: String,
@@ -46,9 +77,16 @@ class ItemRepository(private val itemDao: ItemDao) {
         expiryDate: String,
         itemId: String
     ): Boolean {
+        // 🧹 Delete old image if it's different from new one
+        if (!oldItemPhoto.isNullOrEmpty() && oldItemPhoto != newItemPhoto) {
+            val oldFile = File(context.filesDir, oldItemPhoto)
+            if (oldFile.exists()) oldFile.delete()
+        }
+
+        // 💾 Update database
         val rowsUpdated = itemDao.updateItemById(
             itemName,
-            itemPhoto,
+            newItemPhoto,
             itemCode,
             itemCategory,
             itemDescription,
@@ -57,8 +95,13 @@ class ItemRepository(private val itemDao: ItemDao) {
             expiryDate,
             itemId
         ) ?: 0
+
         return rowsUpdated > 0
     }
+
+
+
+
 
 //    suspend fun markAsNotified(itemId: String) = itemDao.markAsNotified(itemId)
 

@@ -69,9 +69,56 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
     /**
      * Update the item by Id
      */
+//    fun updateItemById(
+//        itemName: String,
+//        itemPhoto: String,
+//        itemCode: String,
+//        itemCategory: String,
+//        itemDescription: String,
+//        itemQuantity: Int,
+//        manufactureDate: String,
+//        expiryDate: String,
+//        itemId: String
+//    ) {
+//        viewModelScope.launch {
+//            val success = itemRepository.updateItemById(
+//                itemName,
+//                itemPhoto,
+//                itemCode,
+//                itemCategory,
+//                itemDescription,
+//                itemQuantity,
+//                manufactureDate,
+//                expiryDate,
+//                itemId
+//            )
+//
+//            if (success) {
+//                // ✅ Optional: Update local state if you’re holding a cached list
+//                _items.value = _items.value.map { item ->
+//                    if (item.itemId == itemId) {
+//                        item.copy(
+//                            itemName = itemName,
+//                            itemPhoto = itemPhoto,
+//                            itemCode = itemCode,
+//                            itemCategory = itemCategory,
+//                            itemDescription = itemDescription,
+//                            itemQuantity = itemQuantity,
+//                            manufactureDate = manufactureDate,
+//                            expiryDate = expiryDate
+//                        )
+//                    } else item
+//                }
+//            }
+//        }
+//    }
+
+
     fun updateItemById(
+        context: Context,
         itemName: String,
-        itemPhoto: String,
+        newItemPhoto: String,
+        oldItemPhoto: String?,
         itemCode: String,
         itemCategory: String,
         itemDescription: String,
@@ -82,8 +129,10 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
     ) {
         viewModelScope.launch {
             val success = itemRepository.updateItemById(
+                context,
                 itemName,
-                itemPhoto,
+                newItemPhoto,
+                oldItemPhoto,
                 itemCode,
                 itemCategory,
                 itemDescription,
@@ -94,12 +143,11 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
             )
 
             if (success) {
-                // ✅ Optional: Update local state if you’re holding a cached list
                 _items.value = _items.value.map { item ->
                     if (item.itemId == itemId) {
                         item.copy(
                             itemName = itemName,
-                            itemPhoto = itemPhoto,
+                            itemPhoto = newItemPhoto,
                             itemCode = itemCode,
                             itemCategory = itemCategory,
                             itemDescription = itemDescription,
@@ -112,6 +160,7 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
             }
         }
     }
+
 
 
     // Holds a single event item

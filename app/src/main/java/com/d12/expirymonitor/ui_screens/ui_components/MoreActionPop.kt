@@ -59,19 +59,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import com.d12.expirymonitor.R
+import com.d12.expirymonitor.navigationGraph.Screen
 import com.d12.expirymonitor.viewmodel.ItemViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Regular
+import compose.icons.fontawesomeicons.regular.Edit
 import compose.icons.fontawesomeicons.regular.TrashAlt
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoreActionPop(
+    navController: NavController,
     onDismiss: () -> Unit,
     itemId: String,
     itemPhotoPath: String?
+
 ) {
     val itemViewModel: ItemViewModel = koinViewModel()
     val backgroundColor = colorResource(id = R.color.aquamarine)
@@ -119,7 +124,27 @@ fun MoreActionPop(
                     Text(text = "Delete", fontSize = 16.sp)
                 }
 
-
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(
+                                Screen.EditProduct.createRoute(
+                                    itemId
+                                )
+                            )
+                        }
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = FontAwesomeIcons.Regular.Edit,
+                        contentDescription = "Edit Item",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(text = "Edit Item", fontSize = 16.sp)
+                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

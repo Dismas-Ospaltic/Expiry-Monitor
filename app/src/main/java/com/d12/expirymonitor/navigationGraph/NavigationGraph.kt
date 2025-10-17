@@ -10,6 +10,7 @@ import androidx.compose.animation.*
 import androidx.compose.ui.Modifier
 import com.d12.expirymonitor.ui_screens.AboutScreen
 import com.d12.expirymonitor.ui_screens.AddProductScreen
+import com.d12.expirymonitor.ui_screens.EditItemScreen
 import com.d12.expirymonitor.ui_screens.HomeScreen
 import com.d12.expirymonitor.ui_screens.ProductOverViewScreen
 import com.d12.expirymonitor.ui_screens.SettingScreen
@@ -18,9 +19,9 @@ sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Settings : Screen("settings")
 
-//    object EditProduct : Screen("editProduct/{itemId}") {
-//        fun createRoute(itemId: String) = "editProduct/$itemId"
-//    }
+    object EditProduct : Screen("editProduct/{itemId}") {
+        fun createRoute(itemId: String) = "editProduct/$itemId"
+    }
 
     object AddProduct : Screen("addProduct")
 
@@ -48,10 +49,10 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier) {
         composable(Screen.AddProduct.route) { AddProductScreen(navController) }
         composable(Screen.OverView.route) { ProductOverViewScreen(navController) }
         composable(Screen.AboutApp.route) { AboutScreen(navController) }
-//        composable(Screen.EditProduct.route) { backStackEntry ->
-//            val itemId = backStackEntry.arguments?.getString("itemId") ?: "Unknown"
-//            EditProductScreen(navController, itemId)
-//        }
+        composable(Screen.EditProduct.route) { backStackEntry ->
+            val itemId = backStackEntry.arguments?.getString("itemId") ?: "Unknown"
+            EditItemScreen(navController, itemId)
+        }
 
 
 

@@ -92,6 +92,7 @@ fun EditItemScreen(navController: NavController, itemId: String?) {
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var savedImagePath by remember { mutableStateOf<String?>(null) }
+    var oldImagePath by remember { mutableStateOf<String?>(null) } // 👈 Add this
 
     val localNotificationPrefsViewModel: LocalNotificationPrefsViewModel = koinViewModel()
     val userNotificationData by localNotificationPrefsViewModel.userNotificationData.collectAsState()
@@ -129,21 +130,22 @@ fun EditItemScreen(navController: NavController, itemId: String?) {
 
 
 
+    // ✅ Load data from ViewModel
     LaunchedEffect(itemDetail) {
         itemDetail?.let {
-            if (itemId!!.isEmpty()) {
-                productName = it.itemName
-                productCode = it.itemCode.toString()
-                category = it.itemCategory
-                manufactureDate = it.manufactureDate
-                expiryDate = it.expiryDate
-                description=it.itemDescription.toString()
-                quantity = it.itemQuantity.toString()
-                savedImagePath = it.itemPhoto
-//
-            }
+            productName = it.itemName
+            productCode = it.itemCode ?: ""
+            category = it.itemCategory
+            manufactureDate = it.manufactureDate
+            expiryDate = it.expiryDate
+            description = it.itemDescription ?: ""
+            quantity = it.itemQuantity.toString()
+            savedImagePath = it.itemPhoto
+            oldImagePath = it.itemPhoto // 👈 Save original for comparison
         }
     }
+
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -317,17 +319,32 @@ fun EditItemScreen(navController: NavController, itemId: String?) {
 
 
                     itemViewModel.updateItemById(
+                        context = context,
                         itemName = productName,
-                        itemPhoto = savedImagePath ?: "",
+                        newItemPhoto = savedImagePath.toString(),   // ✅ correct name
+                        oldItemPhoto = oldImagePath.toString(),  // ✅ correct name
                         itemCode = productCode,
                         itemCategory = category,
                         itemDescription = description,
                         itemQuantity = quantity.toIntOrNull() ?: 0,
                         manufactureDate = manufactureDate,
                         expiryDate = expiryDate,
-                        itemId = itemId.toString()
-
+                        itemId = itemId ?: ""
                     )
+
+
+//                    itemViewModel.updateItemById(
+//                        itemName = productName,
+//                        itemPhoto = savedImagePath ?: "",
+//                        itemCode = productCode,
+//                        itemCategory = category,
+//                        itemDescription = description,
+//                        itemQuantity = quantity.toIntOrNull() ?: 0,
+//                        manufactureDate = manufactureDate,
+//                        expiryDate = expiryDate,
+//                        itemId = itemId.toString()
+//
+//                    )
 
 
                     if(userNotificationData.isNotificationEnabled){
@@ -369,7 +386,7 @@ fun EditItemScreen(navController: NavController, itemId: String?) {
                     }
 
 
-                    Toast.makeText(context, "Product added successfully!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Item updated successfully!", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -380,7 +397,7 @@ fun EditItemScreen(navController: NavController, itemId: String?) {
                     .height(50.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Add Item", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text("Update Item", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
