@@ -8,7 +8,6 @@ import com.d12.expirymonitor.viewmodel.ItemViewModel
 import com.d12.expirymonitor.viewmodel.LocalNotificationPrefsViewModel
 import com.d12.expirymonitor.viewmodel.NotificationViewModel
 import org.koin.dsl.module
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 
 

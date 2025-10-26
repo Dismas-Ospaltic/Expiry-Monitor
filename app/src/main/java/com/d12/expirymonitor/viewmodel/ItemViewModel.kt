@@ -162,7 +162,6 @@ class ItemViewModel(private val itemRepository: ItemRepository) : ViewModel() {
     }
 
 
-
     // Holds a single event item
     private val _itemDetail = MutableStateFlow<ItemEntity?>(null)
     val itemDetail: StateFlow<ItemEntity?> = _itemDetail

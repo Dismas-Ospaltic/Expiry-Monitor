@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.d12.expirymonitor.model.ItemEntity
-import com.d12.expirymonitor.utils.dateFormat
 import kotlinx.coroutines.flow.Flow
 
 //This interface defines the database operations.

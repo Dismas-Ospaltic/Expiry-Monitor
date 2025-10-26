@@ -2,72 +2,37 @@ package com.d12.expirymonitor.ui_screens
 
 
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.d12.expirymonitor.R
-import com.d12.expirymonitor.model.ItemEntity
-import com.d12.expirymonitor.ui_screens.ui_components.DatePickerField
-import com.d12.expirymonitor.utils.StatusBarDynamicColor
-import com.d12.expirymonitor.utils.copyImageToInternalStorage
-import com.d12.expirymonitor.utils.formatTimeFromTimestamp
-import com.d12.expirymonitor.utils.outlinedFieldColors
-import com.d12.expirymonitor.utils.saveBitmapToInternalStorage
 import com.d12.expirymonitor.viewmodel.ItemViewModel
-import com.d12.expirymonitor.viewmodel.LocalNotificationPrefsViewModel
-import com.d12.expirymonitor.viewmodel.NotificationViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.AngleLeft
-import compose.icons.fontawesomeicons.solid.Camera
-import compose.icons.fontawesomeicons.solid.Cog
 import org.koin.androidx.compose.koinViewModel
-import java.io.File
-import java.time.LocalDateTime
-import kotlin.random.Random
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -250,8 +215,6 @@ fun AboutScreen(navController: NavController) {
             )
             Text(
                 text = """
-               
-All content, designs, and code in this application are original works created by D12 Labs.
 
 Third-party assets (such as icons and animations) are the property of their respective owners and are used in accordance with their free to use licenses.
 

@@ -21,7 +21,10 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true      // Enable shrinking & obfuscation
+            isShrinkResources = true    // Removes unused drawables, layouts, etc.
+            isDebuggable = false        // Important for release security
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -123,8 +126,8 @@ dependencies {
 // ✨ (Optional) Lottie Animations
 // ==========================
 // Use for animated vector graphics (.json or .lottie files)
- implementation("com.github.LottieFiles:dotlottie-android:0.9.3")
- implementation("com.airbnb.android:lottie-compose:6.1.0")
+// implementation("com.github.LottieFiles:dotlottie-android:0.9.3")
+// implementation("com.airbnb.android:lottie-compose:6.1.0")
 
     //
     implementation("io.coil-kt:coil-compose:2.4.0")

@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -25,8 +24,6 @@ import com.d12.expirymonitor.viewmodel.ItemViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.ExclamationCircle
-import compose.icons.fontawesomeicons.solid.ExclamationTriangle
-import compose.icons.fontawesomeicons.solid.OilCan
 import compose.icons.fontawesomeicons.solid.ShieldAlt
 import org.koin.androidx.compose.koinViewModel
 

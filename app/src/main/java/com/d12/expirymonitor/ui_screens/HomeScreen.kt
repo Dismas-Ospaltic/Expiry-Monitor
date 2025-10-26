@@ -4,8 +4,6 @@ package com.d12.expirymonitor.ui_screens
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -27,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.style.TextOverflow
 import com.d12.expirymonitor.utils.StatusBarDynamicColor
 import com.d12.expirymonitor.R
 import com.d12.expirymonitor.ui_screens.ui_components.MoreActionPop
@@ -37,7 +34,6 @@ import com.d12.expirymonitor.utils.requestNotificationPermission
 import com.d12.expirymonitor.viewmodel.ItemViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.CalendarDay
 import compose.icons.fontawesomeicons.solid.Search
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel

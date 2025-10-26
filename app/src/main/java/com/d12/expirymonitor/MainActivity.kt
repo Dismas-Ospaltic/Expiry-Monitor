@@ -81,7 +81,6 @@ import com.d12.expirymonitor.ui_screens.ui_components.FabHome
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.CalendarDay
 import compose.icons.fontawesomeicons.solid.ClipboardList
 import compose.icons.fontawesomeicons.solid.Cog
 import compose.icons.fontawesomeicons.solid.Home
